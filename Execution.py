@@ -26,7 +26,7 @@ write_propagation_results_to_file(
 earth_escape_deltav = departure_delta_v(lambert_history)
 venus_arrival_deltav = arrival_delta_v(lambert_history)
 total_delta_v = earth_escape_deltav + venus_arrival_deltav
-
+gg
 print('Earth Escape Delta V = ', earth_escape_deltav, ' m/s')
 print('Venus Capture Delta V = ', venus_arrival_deltav, ' m/s')
 print('Total Delta V = ', total_delta_v, ' m/s')
