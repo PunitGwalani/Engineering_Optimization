@@ -18,6 +18,14 @@ target_body = "Venus"
 global_frame_orientation = 'ECLIPJ2000'
 fixed_step_size = 3600.0
 
+# Departure conditons
+perigee_radius_at_earth = 500*1000
+apogee_radius_at_earth = 500*1000
+
+# Arrival Conditions
+perigee_radius_at_venus = 250*1000
+apogee_radius_at_venus = 66000*1000
+
 # To be changed
 def write_propagation_results_to_file(
         dynamics_simulator: numerical_simulation.SingleArcSimulator,
@@ -167,3 +175,49 @@ def get_unperturbed_propagator_settings(
     )
 
     return propagator_settings
+
+def departure_delta_v(
+        lambert_states: dict):
+
+    mu_earth = spice_interface.get_body_gravitational_parameter('Earth')
+    velocity_vector = np.vstack(list(lambert_states.values()))[0, 3:6]
+    initial_epoch = [t for t in lambert_states.keys()][0]
+
+    radius_at_perigee = spice_interface.get_average_radius('Earth') + perigee_radius_at_earth
+    radius_at_apogee = spice_interface.get_average_radius('Earth') + apogee_radius_at_earth
+    eccentricity = (radius_at_apogee - radius_at_perigee) / (radius_at_apogee + radius_at_apogee)
+
+    state_earth = spice_interface.get_body_cartesian_state_at_epoch('Earth', 'SSB', 'ECLIPJ2000', 'NONE',
+                                                                    initial_epoch)
+    velocity_vector_earth = state_earth[3:6]
+    excess_velocity = velocity_vector - velocity_vector_earth
+    excess_velocity_magnitude = np.sqrt(excess_velocity[0] ** 2 + excess_velocity[1] ** 2 + excess_velocity[2] ** 2)
+
+    delta_v_earth_departure = np.sqrt(((2 * mu_earth) / radius_at_perigee) + excess_velocity_magnitude ** 2) - (
+            1 + eccentricity) * np.sqrt(mu_earth / radius_at_perigee)
+
+    return delta_v_earth_departure
+
+def arrival_delta_v(
+        lambert_states: dict):
+
+    # Delta V required for orbit insertion around venus
+    mu_venus = spice_interface.get_body_gravitational_parameter('Venus')
+    velocity_vector = np.vstack(list(lambert_states.values()))[-1, 3:6]
+    final_epoch = [t for t in lambert_states.keys()][-1]
+
+    radius_at_perigee = spice_interface.get_average_radius('Venus') + perigee_radius_at_venus
+    radius_at_apogee = spice_interface.get_average_radius('Venus') + apogee_radius_at_venus
+    eccentricity = (radius_at_apogee - radius_at_perigee) / (radius_at_apogee + radius_at_apogee)
+    
+    state_venus = spice_interface.get_body_cartesian_state_at_epoch('Venus', 'SSB', 'ECLIPJ2000', 'NONE',
+                                                                   final_epoch)
+    velocity_vector_venus = state_venus[3:6]
+    excess_velocity = velocity_vector - velocity_vector_venus
+    excess_velocity_magnitude = np.sqrt(excess_velocity[0] ** 2 + excess_velocity[1] ** 2 + excess_velocity[2] ** 2)
+
+    delta_v_venus_arrival = np.sqrt(((2 * mu_venus) / radius_at_perigee) + excess_velocity_magnitude ** 2) - (
+            1 + eccentricity) * np.sqrt(
+        mu_venus / radius_at_perigee)
+
+    return abs(delta_v_venus_arrival)

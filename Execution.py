@@ -22,10 +22,21 @@ lambert_history = get_lambert_arc_history(lambert_ephemeris, state_history)
 write_propagation_results_to_file(
     dynamics_simulator, lambert_ephemeris, "Trial",output_directory)
 
+# Delta V calculations
+earth_escape_deltav = departure_delta_v(lambert_history)
+venus_arrival_deltav = arrival_delta_v(lambert_history)
+total_delta_v = earth_escape_deltav + venus_arrival_deltav
+
+print('Earth Escape Delta V = ', earth_escape_deltav, ' m/s')
+print('Venus Capture Delta V = ', venus_arrival_deltav, ' m/s')
+print('Total Delta V = ', total_delta_v, ' m/s')
+
+# Trajectory Plot for visualization
 time = lambert_history.keys()
 time_days = [(t/constants.JULIAN_DAY) - (departure_epoch/constants.JULIAN_DAY) for t in time]
 
 lambert_cartesian_state = np.vstack(list(lambert_history.values()))
+
 
 fig = plt.figure(figsize=(20,17))
 ax = plt.axes(projection = '3d')
@@ -44,5 +55,3 @@ ax.set_zlabel('Z [m]')
 ax.legend()
 ax.set_title("Lambert arc from Earth to Venus", fontweight = 'bold', fontsize = 15)
 plt.show()
-
-# cartesian_states = get_lambert_arc_history(keplerian_ephemeris, )
