@@ -16,7 +16,7 @@ time_of_flight = 185.4590589 * constants.JULIAN_DAY
 arrival_epoch = departure_epoch + time_of_flight
 target_body = "Venus"
 global_frame_orientation = 'ECLIPJ2000'
-fixed_step_size = 3600.0
+fixed_step_size = 3600.0*3
 
 # Departure conditons
 perigee_radius_at_earth = 500*1000
