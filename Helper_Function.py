@@ -40,11 +40,11 @@ def write_propagation_results_to_file(
              directory="./")
 
     # Save dependent variables
-    dependent_variables = dynamics_simulator.dependent_variable_history
-    if len(dependent_variables.keys()) > 0:
-        save2txt(solution=dependent_variables,
-                 filename=output_directory + file_output_identifier + "_dependent_variables.dat",
-                 directory="./")
+    # dependent_variables = dynamics_simulator.dependent_variable_history
+    # if len(dependent_variables.keys()) > 0:
+    #     save2txt(solution=dependent_variables,
+    #              filename=output_directory + file_output_identifier + "_dependent_variables.dat",
+    #              directory="./")
 
     # Save Lambert arc states
     lambert_arc_states = get_lambert_arc_history(lambert_arc_ephemeris, simulation_result)
@@ -157,11 +157,11 @@ def get_unperturbed_propagator_settings(
     acceleration_models = propagation_setup.create_acceleration_models(
         bodies, acceleration_settings, bodies_to_propagate, central_bodies)
 
-    dependent_variables_to_save = [
-        propagation_setup.dependent_variable.relative_position('Earth', 'Sun'),
-        propagation_setup.dependent_variable.relative_position('Venus', 'Sun'),
-        propagation_setup.dependent_variable.relative_distance('Spacecraft', 'Venus')
-    ]
+    # dependent_variables_to_save = [
+    #     propagation_setup.dependent_variable.relative_position('Earth', 'Sun'),
+    #     propagation_setup.dependent_variable.relative_position('Venus', 'Sun'),
+    #     propagation_setup.dependent_variable.relative_distance('Spacecraft', 'Venus')
+    # ]
 
     # Create propagation settings.
     termination_settings = propagation_setup.propagator.time_termination(termination_time)
@@ -170,8 +170,8 @@ def get_unperturbed_propagator_settings(
         acceleration_models,
         bodies_to_propagate,
         initial_state,
-        termination_settings,
-        output_variables = dependent_variables_to_save
+        termination_settings
+        # output_variables = dependent_variables_to_save
     )
 
     return propagator_settings
@@ -196,7 +196,7 @@ def departure_delta_v(
     delta_v_earth_departure = np.sqrt(((2 * mu_earth) / radius_at_perigee) + excess_velocity_magnitude ** 2) - (
             1 + eccentricity) * np.sqrt(mu_earth / radius_at_perigee)
 
-    return delta_v_earth_departure
+    return [delta_v_earth_departure, excess_velocity_magnitude]
 
 def arrival_delta_v(
         lambert_states: dict):
@@ -220,4 +220,4 @@ def arrival_delta_v(
             1 + eccentricity) * np.sqrt(
         mu_venus / radius_at_perigee)
 
-    return abs(delta_v_venus_arrival)
+    return [abs(delta_v_venus_arrival), excess_velocity_magnitude]

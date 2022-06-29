@@ -3,14 +3,12 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 from tudatpy.kernel.astro import time_conversion
 
-X = np.loadtxt('./Results101/Final_DepartureEpochs_og.dat')
-Y = np.loadtxt('./Results101/Final_TimeOfFlight_og.dat')
-Z = np.loadtxt('./Results101/Final_DeltaV_og.dat')
-
-Z1 = np.transpose(Z)
+X = np.loadtxt('./Results101/All_files/Final_DepartureEpochs_final.dat')
+Y = np.loadtxt('./Results101/All_files/Final_TimeOfFlight_final.dat')
+Z = np.loadtxt('./Results101/All_files/Final_DeltaV_final.dat')
 
 fig, ax = plt.subplots()
-CS = ax.contour(X, Y, Z1, levels = 20, cmap='jet')
+CS = ax.contour(X, Y, Z, levels = 20, cmap='jet')
 ax.set_xticks(np.linspace(min(X[0,:]), max(X[0,:]), 5))
 print(np.linspace(min(X[0,:]), max(X[0,:]),5))
 X_calendardates = np.empty(np.shape(np.linspace(min(X[0,:]), max(X[0,:]), 5)), dtype = object)

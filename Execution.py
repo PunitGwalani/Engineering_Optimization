@@ -27,8 +27,10 @@ def compute_total_delta_v(epoch, tof):
         dynamics_simulator, lambert_ephemeris, "Trial",output_directory)
 
     # Delta V calculations
-    earth_escape_deltav = departure_delta_v(lambert_history)
-    venus_arrival_deltav = arrival_delta_v(lambert_history)
+    earth_escape_deltav = departure_delta_v(lambert_history)[0]
+    v_infinity_earth = departure_delta_v(lambert_history)[1]
+    venus_arrival_deltav = arrival_delta_v(lambert_history)[0]
+    v_infinity = arrival_delta_v(lambert_history)[1]
     total_delta_v = earth_escape_deltav + venus_arrival_deltav
 
     end_time = time.time()
@@ -41,7 +43,7 @@ def compute_total_delta_v(epoch, tof):
     print('Epoch: ', epoch)
     print('ToF: ', tof)
 
-    return total_delta_v
+    return [total_delta_v, earth_escape_deltav, venus_arrival_deltav, v_infinity, v_infinity_earth]
 
 # Trajectory Plot for visualization
 # time = lambert_history.keys()
