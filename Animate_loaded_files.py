@@ -1,4 +1,5 @@
 import matplotlib.animation as animation
+import matplotlib.pyplot as plt
 from Plotting_LoadedFiles import *
 import numpy as np
 
@@ -26,15 +27,14 @@ lower_bound=[julian_date_start, 120]
 upper_bound=[julian_date_end, 500]
 
 fig, ax = plt.subplots()
-fig2, ax2 - plt.subplots()
 
 def animate(i):
     ax.cla()
+    ax.scatter(x_positions[i, :], y_positions[i, :], marker='x', facecolor='red', zorder=1)
     plot_contour(fig, ax)
     ax.set_xlim(lower_bound[0], upper_bound[0])
     ax.set_ylim(lower_bound[1], upper_bound[1])
     ax.set_title(r'Particle Swarm Optimization [$\Delta$ V (km/s)] - Iterations: ' + str(i), fontweight = 'bold')
-    ax.scatter(x_positions[i,:], y_positions[i, :], marker = 'x', facecolor='black') # removed s =
     # ax.quiver(x_positions[i,:], y_positions[i, :], x_pos_updated[i, :],
     #           y_pos_updated[i, :], color = 'b', scale = 1)
 
@@ -45,10 +45,13 @@ ani.save('PSO_animation.gif', writer='pillow', dpi=720)
 
 # Plotting the fitness plot
 
-ax2.plot(range(len(fitness)), fitness)
-ax2.set_ylim(0, 100)
-ax2.set_yscale('log')
+fig2, ax2 = plt.subplots()
+ax2.plot(range(len(fitness)), fitness/1000, linewidth = 1.5)
+ax2.set_xlim(0, 100)
+# ax2.set_ylim(0.02, np.amax(fitness/1000))
+# ax2.set_yscale('log')
 ax2.set_xlabel('Iterations [-]', fontweight = 'bold')
-ax2.set_ylabel('Best Global Fitness [m/s]', fontweight = 'bold')
+ax2.set_ylabel('Best Global Fitness [km/s]', fontweight = 'bold')
 ax2.set_title('Fitness Curve - Particle Swarm Optimization', fontweight = 'bold')
+fig2.savefig('Fitness_Curve.png')
 plt.show()
