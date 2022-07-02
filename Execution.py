@@ -13,7 +13,7 @@ def compute_total_delta_v(epoch, tof):
     time_of_flight = tof * constants.JULIAN_DAY
     arrival_epoch = departure_epoch + time_of_flight
 
-    target_body = "Venus"
+    target_body = 'Venus'
 
     bodies = create_simulation_bodies()
     lambert_ephemeris = get_lambert_problem_result(bodies, target_body, departure_epoch, arrival_epoch)
@@ -33,6 +33,11 @@ def compute_total_delta_v(epoch, tof):
     v_infinity = arrival_delta_v(lambert_history)[1]
     total_delta_v = earth_escape_deltav + venus_arrival_deltav
 
+    lambert_states = np.vstack(list(lambert_history.values()))
+    position_magnitudes = np.sqrt(lambert_states[:, 0]**2 + lambert_states[:, 1]**2 + lambert_states[:, 2]**2)
+    maximum_position_magnitude = np.amax(position_magnitudes)
+    minimum_position_magnitude = np.amin(position_magnitudes)
+
     end_time = time.time()
 
     # print('Earth Escape Delta V = ', earth_escape_deltav, ' m/s')
@@ -40,10 +45,11 @@ def compute_total_delta_v(epoch, tof):
     # print('Total Delta V = ', total_delta_v, ' m/s')
     # print('Total CPU Time = ', (end_time - start_time), ' s')
 
-    print('Epoch: ', epoch)
-    print('ToF: ', tof)
+    # print('Epoch: ', epoch)
+    # print('ToF: ', tof)
 
-    return [total_delta_v, earth_escape_deltav, venus_arrival_deltav, v_infinity, v_infinity_earth]
+    return [total_delta_v, earth_escape_deltav, venus_arrival_deltav, v_infinity, v_infinity_earth,
+            maximum_position_magnitude, minimum_position_magnitude]
 
 # Trajectory Plot for visualization
 # time = lambert_history.keys()

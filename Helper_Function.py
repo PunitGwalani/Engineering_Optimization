@@ -14,7 +14,7 @@ from tudatpy.kernel.astro import element_conversion
 departure_epoch = 3813.075185 * constants.JULIAN_DAY
 time_of_flight = 185.4590589 * constants.JULIAN_DAY
 arrival_epoch = departure_epoch + time_of_flight
-target_body = "Venus"
+target_body = 'Venus'
 global_frame_orientation = 'ECLIPJ2000'
 fixed_step_size = 3600.0*3
 
