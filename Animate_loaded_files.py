@@ -6,16 +6,16 @@ import numpy as np
 from tudatpy.kernel.astro import time_conversion
 import datetime
 
-x_positions = np.loadtxt('./Results101/All_files/x_position_final.dat')
-y_positions = np.loadtxt('./Results101/All_files/y_position_final.dat')
-x_velocity = np.loadtxt('./Results101/All_files/x_velocity_final.dat')
-y_velocity = np.loadtxt('./Results101/All_files/y_velocity_final.dat')
-fitness = np.loadtxt('./Results101/All_files/Fitness_best_final.dat')
+x_positions = np.loadtxt('./Results101/All_files/x_position.dat')
+y_positions = np.loadtxt('./Results101/All_files/y_position.dat')
+x_velocity = np.loadtxt('./Results101/All_files/x_velocity.dat')
+y_velocity = np.loadtxt('./Results101/All_files/y_velocity.dat')
+fitness = np.loadtxt('./Results101/All_files/Fitness_best.dat')
 
 x_pos_updated = np.add(x_positions, x_velocity)
 y_pos_updated = np.add(y_positions, y_velocity)
 
-fitness = np.loadtxt('./Results101/All_files/Fitness_best_final.dat')
+fitness = np.loadtxt('./Results101/All_files/Fitness_best.dat')
 
 calendar_date_start = datetime.datetime(2024, 1, 1, 00, 00, 00)
 julian_date_start = time_conversion.calendar_date_to_julian_day_since_epoch(calendar_date_start)
