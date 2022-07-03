@@ -16,15 +16,27 @@ test_function = False
 
 if test_function:
     # rastrigin function
-    def fitness_rastrigin(position1, position2):
-        fitnessVal = 0.0
-        for i in range(2):
-            if i == 0:
-                xi = position1
-            else:
-                xi = position2
-            fitnessVal += (xi * xi) - (10 * math.cos(2 * math.pi * xi)) + 10
-        return fitnessVal
+    # def fitness_rastrigin(position1, position2):
+    #     fitnessVal = 0.0
+    #     for i in range(2):
+    #         if i == 0:
+    #             xi = position1
+    #         else:
+    #             xi = position2
+    #         fitnessVal += (xi * xi) - (10 * math.cos(2 * math.pi * xi)) + 10
+    #     return fitnessVal
+
+
+    def banana_function(x, y):
+        a = 1
+        b = 100
+        fitness = (a - x) ** 2 + b * (y - x ** 2) ** 2
+        return fitness
+
+    # def schaffer_func(x, y):
+    #     fitness = 1 + ((x ** 2 + y ** 2) ** (0.25)) * ((math.sin(50 * (x ** 2 + y ** 2) ** 0.1)) ** 2 + 1)
+    #     return fitness
+
 else:
     def delta_v(epoch, tof):
 
@@ -195,11 +207,32 @@ calendar_date_end = datetime.datetime(2025, 1, 1, 00, 00, 00)
 julian_date_end = time_conversion.calendar_date_to_julian_day_since_epoch(calendar_date_end)
 
 if test_function:
-    lowerbound = [-10, -10]
-    upperbound = [10, 10]
+    lowerbound = [-2, -1]
+    upperbound = [2, 3]
+    store_pos_x = []
+    store_pos_y = []
+    store_fitness = []
 
-    optimals = pso(fitness_rastrigin, iterations=100, particles=50, lower_bound=lowerbound,
+    use_for_loop = True
+
+    if use_for_loop:
+        for i in range(20):
+            optimals = pso(banana_function, iterations=100, particles=100, lower_bound=lowerbound,
                    upper_bound=upperbound, tol=1e-5, p=0.9)
+            store_pos_x.append(optimals[0][0])
+            store_pos_y.append(optimals[0][1])
+            store_fitness.append(optimals[1])
+
+        average_pos_x = np.average(store_pos_x)
+        average_pos_y = np.average(store_pos_y)
+        average_fitness = np.average(store_fitness)
+
+        print('Average pos: ', [average_pos_x, average_pos_y])
+        print('Average Fitness: ', average_fitness)
+    else:
+        optimals = pso(banana_function, iterations=100, particles=50, lower_bound=lowerbound,
+                       upper_bound=upperbound, tol=1e-5, p=0.9)
+
 else:
 
     lowerbound = [julian_date_start, 120]
@@ -207,8 +240,6 @@ else:
 
     optimals = pso(delta_v,iterations=100, particles=70, lower_bound=lowerbound,
                    upper_bound=upperbound, tol=1e-1, p=0.9)
-
-
 
 print('Optimal Position: ', optimals[0])
 print('Optimal fitness: ', optimals[1])

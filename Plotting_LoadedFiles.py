@@ -14,7 +14,7 @@ def plot_contour(fig, ax):
     loc = matplotlib.ticker.MaxNLocator(30)
     lvls = loc.tick_values(Z2.min(), Z2.max())
 
-    CS = ax.contour(X, Y, Z2, colors='black', levels = [0.05, 0.1, 0.3, 0.5, 1, 2, 4, 6, 8, 10, 30], zorder = 2)
+    CS = ax.contour(X, Y, Z2, colors='black', levels = [0.05, 0.1, 0.3, 0.5, 1, 2, 4, 6, 8, 10, 30], zorder = 1)
 
     for line, lvl in zip(CS.collections, CS.levels):
         if lvl < 1:
