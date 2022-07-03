@@ -45,8 +45,8 @@ def compute_total_delta_v(epoch, tof):
     # print('Total Delta V = ', total_delta_v, ' m/s')
     # print('Total CPU Time = ', (end_time - start_time), ' s')
 
-    # print('Epoch: ', epoch)
-    # print('ToF: ', tof)
+    print('Epoch: ', epoch)
+    print('ToF: ', tof)
 
     return [total_delta_v, earth_escape_deltav, venus_arrival_deltav, v_infinity, v_infinity_earth,
             maximum_position_magnitude, minimum_position_magnitude]

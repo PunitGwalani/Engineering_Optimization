@@ -18,14 +18,14 @@ calendar_date_end = datetime.datetime(2025, 1, 1, 00, 00, 00)
 julian_date_end = time_conversion.calendar_date_to_julian_day_since_epoch(calendar_date_end)
 print(julian_date_end)
 
-epoch_size = 30
-tof_size = 30
+epoch_size = 150
+tof_size = 300
 rows = epoch_size*tof_size
 
 # epoch_array = np.linspace(julian_date_start, julian_date_end, epoch_size)
 
-epoch_array = np.linspace(8932, 8962, epoch_size)
-tof_array = np.linspace(222, 208, tof_size)
+epoch_array = np.linspace(julian_date_start, julian_date_end, epoch_size)
+tof_array = np.linspace(120, 500, tof_size)
 
 # data_list = []
 #
@@ -43,6 +43,8 @@ earth_escape = np.zeros((tof_size, epoch_size))
 venus_arrival = np.zeros((tof_size, epoch_size))
 excess_velocity = np.zeros((tof_size, epoch_size))
 excess_velocity_earth = np.zeros((tof_size, epoch_size))
+max_position = np.zeros((tof_size, epoch_size))
+min_position = np.zeros((tof_size, epoch_size))
 
 for i in range(epoch_size):
     for j in range(tof_size):
@@ -53,17 +55,21 @@ for i in range(epoch_size):
         venus_arrival[j, i] = (output[2])/1000
         excess_velocity[j, i] = (output[3])/1000
         excess_velocity_earth[j, i] = (output[4]) / 1000
+        max_position[j, i] = output[5]     # m
+        min_position[j, i] = output[6]  #m
         end_time = time.time()
         print('Time:', end_time-start_time, 's')
 
 # Saving the data generated
-np.savetxt('./Results101/All_files/SmallRange_DepartureEpochs.dat', X)
-np.savetxt('./Results101/All_files/SmallRange_TimeOfFlight.dat', Y)
-np.savetxt('./Results101/All_files/SmallRange_DeltaV.dat', final_delta_v)
-np.savetxt('./Results101/All_files/SmallRange_Earth_Escape_DeltaV.dat', earth_escape)
-np.savetxt('./Results101/All_files/SmallRange_Venus_Capture_DeltaV.dat', venus_arrival)
-np.savetxt('./Results101/All_files/SmallRange_Excess_Velocity_Venus.dat', excess_velocity)
-np.savetxt('./Results101/All_files/SmallRange_Excess_Velocity_Earth.dat', excess_velocity_earth)
+np.savetxt('./Results101/All_files/AGAIN_DepartureEpochs.dat', X)
+np.savetxt('./Results101/All_files/AGAIN_TimeOfFlight.dat', Y)
+np.savetxt('./Results101/All_files/AGAIN_DeltaV.dat', final_delta_v)
+np.savetxt('./Results101/All_files/AGAIN_Earth_Escape_DeltaV.dat', earth_escape)
+np.savetxt('./Results101/All_files/AGAIN_Venus_Capture_DeltaV.dat', venus_arrival)
+np.savetxt('./Results101/All_files/AGAIN_Excess_Velocity_Venus.dat', excess_velocity)
+np.savetxt('./Results101/All_files/AGAIN_Excess_Velocity_Earth.dat', excess_velocity_earth)
+np.savetxt('./Results101/All_files/AGAIN_Max_positions.dat', max_position)
+np.savetxt('./Results101/All_files/AGAIN_Min_positions.dat', min_position)
 
 # Plotting the Porkchop plot
 fig1, ax = plt.subplots()
