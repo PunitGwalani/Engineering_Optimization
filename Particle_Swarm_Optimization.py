@@ -15,6 +15,7 @@ from tudatpy.kernel.astro import time_conversion
 test_function = False
 
 if test_function:
+
     # rastrigin function
     # def fitness_rastrigin(position1, position2):
     #     fitnessVal = 0.0
@@ -25,7 +26,6 @@ if test_function:
     #             xi = position2
     #         fitnessVal += (xi * xi) - (10 * math.cos(2 * math.pi * xi)) + 10
     #     return fitnessVal
-
 
     def banana_function(x, y):
         a = 1
@@ -105,9 +105,13 @@ def pso(fitness_func, iterations, particles, lower_bound, upper_bound, tol, p, w
     x_velocity_for_plot = np.zeros((iterations, particles))
     y_velocity_for_plot = np.zeros((iterations, particles))
 
+    fevals = 0
+
     best_fitness_for_plot = np.zeros((iterations,))
 
     swarm = [Particles(fitness_func, lower_bound, upper_bound) for i in range(particles)]
+
+    fevals += particles
 
     for i in range(particles):
         if swarm[i].fitness < best_fitness_global:
@@ -160,6 +164,7 @@ def pso(fitness_func, iterations, particles, lower_bound, upper_bound, tol, p, w
 
 
            swarm[i].fitness = fitness_func(swarm[i].position_indv[0], swarm[i].position_indv[1])
+           fevals += 1
 
            if swarm[i].fitness < swarm[i].best_indv_fitness:
                swarm[i].best_position_indv = swarm[i].fitness
@@ -196,7 +201,7 @@ def pso(fitness_func, iterations, particles, lower_bound, upper_bound, tol, p, w
         k = k + 1
 
     return [best_position_global, best_fitness_global, x_positions_for_plot, y_positions_for_plot,
-            best_fitness_for_plot, x_velocity_for_plot, y_velocity_for_plot, k]
+            best_fitness_for_plot, x_velocity_for_plot, y_velocity_for_plot, k, fevals]
 
 # Test Function
 
@@ -213,12 +218,12 @@ if test_function:
     store_pos_y = []
     store_fitness = []
 
-    use_for_loop = True
+    use_for_loop = False
 
     if use_for_loop:
         for i in range(20):
             optimals = pso(banana_function, iterations=100, particles=100, lower_bound=lowerbound,
-                   upper_bound=upperbound, tol=1e-5, p=0.9)
+                   upper_bound=upperbound, tol=1e-2, p=0.9)
             store_pos_x.append(optimals[0][0])
             store_pos_y.append(optimals[0][1])
             store_fitness.append(optimals[1])
@@ -230,8 +235,8 @@ if test_function:
         print('Average pos: ', [average_pos_x, average_pos_y])
         print('Average Fitness: ', average_fitness)
     else:
-        optimals = pso(banana_function, iterations=100, particles=50, lower_bound=lowerbound,
-                       upper_bound=upperbound, tol=1e-5, p=0.9)
+        optimals = pso(banana_function, iterations=1000, particles=20, lower_bound=lowerbound,
+                       upper_bound=upperbound, tol=1e-2, p=0.9)
 
 else:
 
@@ -239,11 +244,12 @@ else:
     upperbound = [julian_date_end, 500]
 
     optimals = pso(delta_v,iterations=100, particles=70, lower_bound=lowerbound,
-                   upper_bound=upperbound, tol=1e-1, p=0.9)
+                   upper_bound=upperbound, tol=1e-2, p=0.9)
 
 print('Optimal Position: ', optimals[0])
 print('Optimal fitness: ', optimals[1])
 print('Iterations taken: ', optimals[7])
+print('Function Evaluations: ', optimals[8])
 
 np.savetxt('./Results101/All_files/x_position.dat', optimals[2])
 np.savetxt('./Results101/All_files/y_position.dat', optimals[3])
